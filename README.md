@@ -114,3 +114,62 @@ A sample Docker workflow with Nginx, Node.js and Redis
 Node with Docker - Continuous Integration and Delivery
 
 [http://mherman.org/blog/2015/03/06/node-with-docker-continuous-integration-and-delivery/](http://mherman.org/blog/2015/03/06/node-with-docker-continuous-integration-and-delivery/)
+
+<hr>
+
+Using Docker on AWS
+=====
+
+Amazon offers a container service on top of EC2. Would like to know more about this:
+
+[http://aws.amazon.com/ecs/](http://aws.amazon.com/ecs/)
+
+## Access the AWS Instance
+
+For now just use a norma EC2 instance. Fire one up then access it.
+
+[https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/AccessingInstancesLinux.html)
+
+```
+ssh -i <keyfile> ec2-user@<instance-ip>
+```
+
+## Install Docker:
+
+[http://docs.docker.com/installation/amazon/](http://docs.docker.com/installation/amazon/)
+
+```
+sudo yum install -y docker
+sudo service docker start
+```
+
+Install docker-compose. Note that docker-compose is not production ready.
+
+```
+curl -L https://github.com/docker/compose/releases/download/1.1.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+```
+
+You might see bash complain about the redirection because you want to run it on the server and not locally. Wrap it in a string and run it with sudo or bash:
+
+```
+sudo bash -c 'curl -L https://github.com/docker/compose/releases/download/1.1.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose'
+```
+
+## Acquire Images
+
+Could use the docker-hub here. There are much better automated deployment strategies. Need to learn about them.
+
+**SCP**
+
+Push your docker-compose files for now with scp:
+
+```
+scp -i <keyfile> <src> ec2-user@<instance-ip>:<dest>
+```
+
+Use the `-r` flag to recursively copy directories.
+
+**GitHub**
+
+Store all your dockerfile's for the application on github -- aren't you already!? -- and push pull.
